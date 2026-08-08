@@ -136,4 +136,141 @@ void main() {
     expect(afterSorted.last.id, firstId);
     expect(afterSorted.map((p) => p.order).toList(), [0, 1, 2]);
   });
+
+  group('PostDetailEditorNotifier - リプライ', () {
+    late Project detailProject;
+    late Scene detailScene;
+    late _FakeSceneRepository detailRepository;
+    late ProviderContainer detailContainer;
+
+    setUp(() async {
+      detailProject = Project(
+        id: 'project-2',
+        name: '投稿詳細テストプロジェクト',
+        createdAt: DateTime(2026, 8, 1),
+        updatedAt: DateTime(2026, 8, 1),
+      );
+      detailScene = Scene(
+        id: 'scene-2',
+        projectId: detailProject.id,
+        type: SceneType.postDetail,
+        title: '投稿詳細',
+        order: 0,
+        statusBarConfig: StatusBarConfig(
+          platform: StatusBarPlatform.ios,
+          timeMode: TimeMode.current,
+          signalLevel: 4,
+          batteryLevel: 100,
+          isCharging: false,
+        ),
+        createdAt: DateTime(2026, 8, 1),
+        updatedAt: DateTime(2026, 8, 1),
+      );
+      detailRepository = _FakeSceneRepository();
+      await detailRepository.add(detailProject, detailScene);
+
+      detailContainer = ProviderContainer(
+        overrides: [
+          sceneRepositoryProvider.overrideWithValue(detailRepository),
+        ],
+      );
+      addTearDown(detailContainer.dispose);
+    });
+
+    SceneEditorArg buildDetailArg() =>
+        (project: detailProject, scene: detailScene);
+
+    test('repliesOfはorder2以上の投稿をorder昇順で返す', () async {
+      final arg = buildDetailArg();
+      final notifier = detailContainer.read(
+        postDetailEditorProvider(arg).notifier,
+      );
+      // build()でメイン投稿(order:0)が生成される
+      detailContainer.read(postDetailEditorProvider(arg));
+
+      await notifier.addReply();
+      await notifier.addReply();
+
+      final state = detailContainer.read(postDetailEditorProvider(arg));
+      final replies = repliesOf(state);
+      expect(replies.map((p) => p.order).toList(), [2, 3]);
+    });
+
+    test('addReplyはアカウントと投稿を1件ずつ追加し、order:2から採番する', () async {
+      final arg = buildDetailArg();
+      final notifier = detailContainer.read(
+        postDetailEditorProvider(arg).notifier,
+      );
+      final initial = detailContainer.read(postDetailEditorProvider(arg));
+      final initialAccountCount = initial.accounts.length;
+
+      await notifier.addReply();
+
+      final state = detailContainer.read(postDetailEditorProvider(arg));
+      final replies = repliesOf(state);
+      expect(replies.length, 1);
+      expect(replies.first.order, 2);
+      expect(state.accounts.length, initialAccountCount + 1);
+
+      final saved = detailRepository.getAll(detailProject).single;
+      expect(repliesOf(saved).length, 1);
+    });
+
+    test('removeReplyは対象の投稿・アカウントを削除しorderを2始まりで詰め直す', () async {
+      final arg = buildDetailArg();
+      final notifier = detailContainer.read(
+        postDetailEditorProvider(arg).notifier,
+      );
+      await notifier.addReply();
+      await notifier.addReply();
+      await notifier.addReply();
+
+      final before = detailContainer.read(postDetailEditorProvider(arg));
+      final target = repliesOf(before)[1];
+
+      await notifier.removeReply(target);
+
+      final after = detailContainer.read(postDetailEditorProvider(arg));
+      final replies = repliesOf(after);
+      expect(replies.length, 2);
+      expect(replies.map((p) => p.order).toList(), [2, 3]);
+      expect(replies.any((p) => p.id == target.id), isFalse);
+      expect(after.accounts.any((a) => a.id == target.accountId), isFalse);
+    });
+
+    test('reorderReplyはリプライのみを対象に並び替え、orderを2始まりで振り直す', () async {
+      final arg = buildDetailArg();
+      final notifier = detailContainer.read(
+        postDetailEditorProvider(arg).notifier,
+      );
+      await notifier.addReply();
+      await notifier.addReply();
+      await notifier.addReply();
+
+      final before = detailContainer.read(postDetailEditorProvider(arg));
+      final firstReplyId = repliesOf(before).first.id;
+
+      // 先頭のリプライを末尾(index 2)へ移動する
+      await notifier.reorderReply(0, 2);
+
+      final after = detailContainer.read(postDetailEditorProvider(arg));
+      final replies = repliesOf(after);
+      expect(replies.last.id, firstReplyId);
+      expect(replies.map((p) => p.order).toList(), [2, 3, 4]);
+    });
+
+    test('引用ポストと共存してもリプライのorder採番は常に2から始まる', () async {
+      final arg = buildDetailArg();
+      final notifier = detailContainer.read(
+        postDetailEditorProvider(arg).notifier,
+      );
+
+      await notifier.addQuotedPost();
+      await notifier.addReply();
+
+      final state = detailContainer.read(postDetailEditorProvider(arg));
+      expect(quotedPostOf(state)!.order, 1);
+      expect(repliesOf(state).single.order, 2);
+    });
+  });
 }

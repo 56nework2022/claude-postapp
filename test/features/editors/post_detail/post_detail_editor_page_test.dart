@@ -9,6 +9,7 @@ import 'package:fake_x_post_maker/models/scene.dart';
 import 'package:fake_x_post_maker/models/status_bar_config.dart';
 import 'package:fake_x_post_maker/providers/scene_providers.dart';
 import 'package:fake_x_post_maker/widgets/post_card.dart';
+import 'package:fake_x_post_maker/widgets/post_editor_sheet.dart';
 
 /// Hiveの実ディスクI/OはtestWidgetsのFakeAsyncゾーン内では待てないため、
 /// Widgetテストではインメモリのフェイクリポジトリに差し替える
@@ -148,5 +149,119 @@ void main() {
 
     expect(find.text('引用元アカウント設定'), findsNothing);
     expect(find.byType(PostCard), findsOneWidget);
+  });
+
+  testWidgets('リプライを追加するとプレビュー・一覧に表示され、保存される', (tester) async {
+    await pumpPage(tester);
+
+    await tester.dragUntilVisible(
+      find.widgetWithText(TextButton, 'リプライを追加'),
+      find.byType(ListView),
+      const Offset(0, -300),
+    );
+    await tester.tap(find.widgetWithText(TextButton, 'リプライを追加'));
+    await tester.pumpAndSettle();
+
+    // 一覧内タイルはListView仮想化により初期表示範囲外にあり得るためスクロールする
+    final replyTilePostCard = find.descendant(
+      of: find.byType(ReorderableListView),
+      matching: find.byType(PostCard),
+    );
+    await tester.dragUntilVisible(
+      replyTilePostCard,
+      find.byType(ListView),
+      const Offset(0, -300),
+    );
+
+    // メインのプレビュー・リプライのプレビュー・一覧内タイルの3件表示される
+    expect(find.byType(PostCard), findsNWidgets(3));
+
+    final savedScene = repository.getAll(project).single;
+    expect(savedScene.posts.length, 2);
+    expect(savedScene.posts.firstWhere((p) => p.order == 2), isNotNull);
+  });
+
+  testWidgets('リプライをタップして本文を編集すると保存される', (tester) async {
+    await pumpPage(tester);
+
+    await tester.dragUntilVisible(
+      find.widgetWithText(TextButton, 'リプライを追加'),
+      find.byType(ListView),
+      const Offset(0, -300),
+    );
+    await tester.tap(find.widgetWithText(TextButton, 'リプライを追加'));
+    await tester.pumpAndSettle();
+
+    final replyId = repository
+        .getAll(project)
+        .single
+        .posts
+        .firstWhere((p) => p.order == 2)
+        .id;
+
+    final replyTilePostCard = find.descendant(
+      of: find.byType(ReorderableListView),
+      matching: find.byType(PostCard),
+    );
+    await tester.dragUntilVisible(
+      replyTilePostCard,
+      find.byType(ListView),
+      const Offset(0, -300),
+    );
+    await tester.tap(replyTilePostCard, warnIfMissed: false);
+    await tester.pumpAndSettle();
+
+    expect(find.text('投稿を編集'), findsOneWidget);
+
+    await tester.enterText(
+      find.descendant(
+        of: find.byType(PostEditorSheet),
+        matching: find.widgetWithText(TextField, '本文'),
+      ),
+      'リプライ本文',
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(FilledButton, '閉じる'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.descendant(
+        of: find.byType(PostCard),
+        matching: find.text('リプライ本文'),
+      ),
+      findsWidgets,
+    );
+
+    final savedScene = repository.getAll(project).single;
+    expect(
+      savedScene.posts.firstWhere((p) => p.id == replyId).body,
+      'リプライ本文',
+    );
+  });
+
+  testWidgets('削除ボタンでリプライを削除すると一覧・プレビューから消え、保存される', (tester) async {
+    await pumpPage(tester);
+
+    await tester.dragUntilVisible(
+      find.widgetWithText(TextButton, 'リプライを追加'),
+      find.byType(ListView),
+      const Offset(0, -300),
+    );
+    await tester.tap(find.widgetWithText(TextButton, 'リプライを追加'));
+    await tester.pumpAndSettle();
+
+    await tester.dragUntilVisible(
+      find.byIcon(Icons.delete_outline),
+      find.byType(ListView),
+      const Offset(0, -300),
+    );
+    await tester.tap(find.byIcon(Icons.delete_outline));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PostCard), findsOneWidget);
+
+    final savedScene = repository.getAll(project).single;
+    expect(savedScene.posts.length, 1);
   });
 }

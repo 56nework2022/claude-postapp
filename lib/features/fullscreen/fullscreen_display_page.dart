@@ -159,15 +159,26 @@ class _PostDetailContent extends StatelessWidget {
     final quotedAccount = quotedPost == null
         ? null
         : accountOf(scene, quotedPost.accountId);
+    final replies = repliesOf(scene);
 
     return SingleChildScrollView(
-      child: PostCard(
-        post: mainPost,
-        account: mainAccount,
-        variant: PostCardVariant.detail,
-        quotedChild: quotedPost == null || quotedAccount == null
-            ? null
-            : PostCard(post: quotedPost, account: quotedAccount),
+      child: Column(
+        children: [
+          PostCard(
+            post: mainPost,
+            account: mainAccount,
+            variant: PostCardVariant.detail,
+            quotedChild: quotedPost == null || quotedAccount == null
+                ? null
+                : PostCard(post: quotedPost, account: quotedAccount),
+          ),
+          for (final reply in replies)
+            PostCard(
+              key: ValueKey('reply-fullscreen-${reply.id}'),
+              post: reply,
+              account: accountOf(scene, reply.accountId),
+            ),
+        ],
       ),
     );
   }

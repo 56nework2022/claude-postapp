@@ -10,6 +10,7 @@ import '../../../models/status_bar_config.dart';
 import '../../../providers/editor_providers.dart';
 import '../../../widgets/fake_status_bar.dart';
 import '../../../widgets/post_card.dart';
+import '../../../widgets/post_editor_sheet.dart';
 import '../../../widgets/post_fields_form.dart';
 import '../../account/account_editor_sheet.dart';
 import '../../fullscreen/fullscreen_display_page.dart';
@@ -42,6 +43,7 @@ class PostDetailEditorPage extends ConsumerWidget {
     final quotedAccount = quotedPost == null
         ? null
         : accountOf(currentScene, quotedPost.accountId);
+    final replies = repliesOf(currentScene);
 
     return Scaffold(
       appBar: AppBar(
@@ -65,13 +67,34 @@ class PostDetailEditorPage extends ConsumerWidget {
             child: Column(
               children: [
                 FakeStatusBar(config: currentScene.statusBarConfig),
-                PostCard(
-                  post: mainPost,
-                  account: mainAccount,
-                  variant: PostCardVariant.detail,
-                  quotedChild: quotedPost == null || quotedAccount == null
-                      ? null
-                      : PostCard(post: quotedPost, account: quotedAccount),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.sizeOf(context).height * 0.4,
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        PostCard(
+                          post: mainPost,
+                          account: mainAccount,
+                          variant: PostCardVariant.detail,
+                          quotedChild:
+                              quotedPost == null || quotedAccount == null
+                              ? null
+                              : PostCard(
+                                  post: quotedPost,
+                                  account: quotedAccount,
+                                ),
+                        ),
+                        for (final reply in replies)
+                          PostCard(
+                            key: ValueKey('reply-preview-${reply.id}'),
+                            post: reply,
+                            account: accountOf(currentScene, reply.accountId),
+                          ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -97,6 +120,12 @@ class PostDetailEditorPage extends ConsumerWidget {
                   notifier: notifier,
                   quotedPost: quotedPost,
                   quotedAccount: quotedAccount,
+                ),
+                const Divider(height: AppSpacing.xl),
+                _RepliesSection(
+                  notifier: notifier,
+                  scene: currentScene,
+                  replies: replies,
                 ),
               ],
             ),
@@ -206,6 +235,121 @@ class _QuotedPostSection extends StatelessWidget {
           ),
         ],
       ],
+    );
+  }
+}
+
+class _RepliesSection extends StatelessWidget {
+  const _RepliesSection({
+    required this.notifier,
+    required this.scene,
+    required this.replies,
+  });
+
+  final PostDetailEditorNotifier notifier;
+  final Scene scene;
+  final List<Post> replies;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                'リプライ',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+            TextButton.icon(
+              onPressed: notifier.addReply,
+              icon: const Icon(Icons.add),
+              label: const Text('リプライを追加'),
+            ),
+          ],
+        ),
+        if (replies.isNotEmpty)
+          ReorderableListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            buildDefaultDragHandles: false,
+            itemCount: replies.length,
+            onReorderItem: notifier.reorderReply,
+            itemBuilder: (context, index) {
+              final reply = replies[index];
+              final account = accountOf(scene, reply.accountId);
+              return _ReplyTile(
+                key: ValueKey(reply.id),
+                index: index,
+                notifier: notifier,
+                post: reply,
+                account: account,
+              );
+            },
+          ),
+      ],
+    );
+  }
+}
+
+class _ReplyTile extends StatelessWidget {
+  const _ReplyTile({
+    super.key,
+    required this.index,
+    required this.notifier,
+    required this.post,
+    required this.account,
+  });
+
+  final int index;
+  final PostDetailEditorNotifier notifier;
+  final Post post;
+  final Account account;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      key: ValueKey(post.id),
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ReorderableDragStartListener(
+              index: index,
+              child: const Padding(
+                padding: EdgeInsets.all(12),
+                child: Icon(Icons.drag_handle),
+              ),
+            ),
+            Expanded(
+              child: InkWell(
+                onTap: () => _openReplyEditor(context),
+                child: PostCard(post: post, account: account),
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete_outline),
+              tooltip: '削除',
+              onPressed: () => notifier.removeReply(post),
+            ),
+          ],
+        ),
+        const Divider(height: 1),
+      ],
+    );
+  }
+
+  Future<void> _openReplyEditor(BuildContext context) async {
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => PostEditorSheet(
+        post: post,
+        account: account,
+        onCommit: notifier.commit,
+      ),
     );
   }
 }

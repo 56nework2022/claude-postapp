@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
 
-import '../../../constants/app_spacing.dart';
-import '../../../models/account.dart';
-import '../../../models/post.dart';
-import '../../../providers/editor_providers.dart';
-import '../../../widgets/post_fields_form.dart';
-import '../../account/account_editor_sheet.dart';
+import '../constants/app_spacing.dart';
+import '../models/account.dart';
+import '../models/post.dart';
+import '../features/account/account_editor_sheet.dart';
+import 'post_fields_form.dart';
 
-/// タイムライン上の投稿1件を編集するボトムシート。
+/// 投稿1件を編集するボトムシート。
 ///
-/// [post]・[account] は直接ミューテートし、変更のたびに[notifier]の`commit()`で
+/// [post]・[account] は直接ミューテートし、変更のたびに[onCommit]で
 /// Hiveへ保存する。閉じるボタンで戻るだけで、編集内容はその都度保存済み。
-class TimelinePostEditorSheet extends StatelessWidget {
-  const TimelinePostEditorSheet({
+class PostEditorSheet extends StatelessWidget {
+  const PostEditorSheet({
     super.key,
     required this.post,
     required this.account,
-    required this.notifier,
+    required this.onCommit,
   });
 
   final Post post;
   final Account account;
-  final TimelineEditorNotifier notifier;
+  final Future<void> Function() onCommit;
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +53,11 @@ class TimelinePostEditorSheet extends StatelessWidget {
                     builder: (_) =>
                         AccountEditorSheet(initialAccount: account),
                   );
-                  if (updated != null) await notifier.commit();
+                  if (updated != null) await onCommit();
                 },
               ),
               const SizedBox(height: AppSpacing.sm),
-              PostFieldsForm(post: post, onChanged: notifier.commit),
+              PostFieldsForm(post: post, onChanged: onCommit),
               const SizedBox(height: AppSpacing.md),
               FilledButton(
                 onPressed: () => Navigator.of(context).pop(),

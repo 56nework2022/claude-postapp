@@ -9,9 +9,9 @@ import '../../../models/status_bar_config.dart';
 import '../../../providers/editor_providers.dart';
 import '../../../widgets/fake_status_bar.dart';
 import '../../../widgets/post_card.dart';
+import '../../../widgets/post_editor_sheet.dart';
 import '../../fullscreen/fullscreen_display_page.dart';
 import '../../status_bar/status_bar_config_editor_sheet.dart';
-import 'timeline_post_editor_sheet.dart';
 
 /// タイムラインエディタ画面。
 ///
@@ -168,10 +168,10 @@ class _TimelinePostTile extends StatelessWidget {
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (_) => TimelinePostEditorSheet(
+      builder: (_) => PostEditorSheet(
         post: post,
         account: account,
-        notifier: notifier,
+        onCommit: notifier.commit,
       ),
     );
   }

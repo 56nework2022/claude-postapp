@@ -23,6 +23,13 @@ Post? quotedPostOf(Scene scene) {
   return null;
 }
 
+/// リプライ投稿(order:2以上)を`order`昇順で返す。
+List<Post> repliesOf(Scene scene) {
+  final replies = scene.posts.where((post) => post.order >= 2).toList()
+    ..sort((a, b) => a.order.compareTo(b.order));
+  return replies;
+}
+
 /// 指定したaccountIdに対応するAccountを返す。
 Account accountOf(Scene scene, String accountId) =>
     scene.accounts.firstWhere((account) => account.id == accountId);
@@ -123,6 +130,43 @@ class PostDetailEditorNotifier extends FamilyNotifier<Scene, SceneEditorArg> {
     state.accounts.removeWhere((account) => account.id == quoted.accountId);
     mainPostOf(state).quotedPostId = null;
     await commit();
+  }
+
+  Future<void> addReply() async {
+    final account = _createDefaultAccount();
+    state.accounts.add(account);
+    final reply = _createDefaultPost(
+      order: 2 + repliesOf(state).length,
+      accountId: account.id,
+    );
+    state.posts.add(reply);
+    await commit();
+  }
+
+  Future<void> removeReply(Post reply) async {
+    state.posts.removeWhere((post) => post.id == reply.id);
+    state.accounts.removeWhere((account) => account.id == reply.accountId);
+    _reindexReplyOrder();
+    await commit();
+  }
+
+  /// [newIndex] は`onReorderItem`が渡す値で、oldIndexの項目を取り除いた後の
+  /// 挿入先を指す(取り除きによる補正は呼び出し元(Flutter側)で完了している)。
+  Future<void> reorderReply(int oldIndex, int newIndex) async {
+    final replies = repliesOf(state);
+    final moved = replies.removeAt(oldIndex);
+    replies.insert(newIndex, moved);
+    for (var i = 0; i < replies.length; i++) {
+      replies[i].order = 2 + i;
+    }
+    await commit();
+  }
+
+  void _reindexReplyOrder() {
+    final replies = repliesOf(state);
+    for (var i = 0; i < replies.length; i++) {
+      replies[i].order = 2 + i;
+    }
   }
 }
 

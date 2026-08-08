@@ -72,6 +72,27 @@ void main() {
     expect(find.text('本文'), findsOneWidget);
   });
 
+  testWidgets('投稿詳細Sceneではメイン投稿の下にリプライがorder順に表示される', (tester) async {
+    final scene = buildScene(
+      type: SceneType.postDetail,
+      posts: [
+        buildPost(id: 'post-1', order: 0, body: 'メイン投稿'),
+        buildPost(id: 'post-3', order: 3, body: 'リプライ2'),
+        buildPost(id: 'post-2', order: 2, body: 'リプライ1'),
+      ],
+      accounts: [account],
+    );
+
+    await tester.pumpWidget(MaterialApp(home: FullscreenDisplayPage(scene: scene)));
+
+    expect(find.byType(PostCard), findsNWidgets(3));
+    final bodies = tester
+        .widgetList<PostCard>(find.byType(PostCard))
+        .map((card) => card.post.body)
+        .toList();
+    expect(bodies, ['メイン投稿', 'リプライ1', 'リプライ2']);
+  });
+
   testWidgets('タイムラインSceneではorder順に複数投稿が一覧表示される', (tester) async {
     final scene = buildScene(
       type: SceneType.timeline,
