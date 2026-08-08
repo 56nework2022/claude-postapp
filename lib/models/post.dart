@@ -14,6 +14,7 @@ class Post {
     required this.postedAt,
     required this.order,
     this.quotedPostId,
+    this.imagePath,
   });
 
   @HiveField(0)
@@ -42,4 +43,7 @@ class Post {
 
   @HiveField(8)
   int order;
+
+  @HiveField(9)
+  String? imagePath;
 }

@@ -52,6 +52,16 @@ class PostCard extends StatelessWidget {
               ).textTheme.bodySmall?.copyWith(color: Colors.grey.shade600),
             ),
           ],
+          if (post.imagePath != null) ...[
+            const SizedBox(height: AppSpacing.sm),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Image.file(File(post.imagePath!), fit: BoxFit.cover),
+              ),
+            ),
+          ],
           if (quotedChild != null) ...[
             const SizedBox(height: AppSpacing.sm),
             DecoratedBox(

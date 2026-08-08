@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../constants/app_spacing.dart';
 import '../models/post.dart';
@@ -66,6 +69,12 @@ class _PostFieldsFormState extends State<PostFieldsForm> {
           },
         ),
         const SizedBox(height: AppSpacing.sm),
+        _PostImagePicker(
+          imagePath: widget.post.imagePath,
+          onPick: _pickImage,
+          onRemove: _removeImage,
+        ),
+        const SizedBox(height: AppSpacing.sm),
         Row(
           children: [
             Expanded(
@@ -104,6 +113,72 @@ class _PostFieldsFormState extends State<PostFieldsForm> {
         ),
         const SizedBox(height: AppSpacing.sm),
         _DateTimeField(post: widget.post, onChanged: widget.onChanged),
+      ],
+    );
+  }
+
+  Future<void> _pickImage() async {
+    final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (picked == null) return;
+    setState(() => widget.post.imagePath = picked.path);
+    widget.onChanged();
+  }
+
+  void _removeImage() {
+    setState(() => widget.post.imagePath = null);
+    widget.onChanged();
+  }
+}
+
+/// 投稿への添付画像1枚を選択・プレビュー・削除するUI。
+class _PostImagePicker extends StatelessWidget {
+  const _PostImagePicker({
+    required this.imagePath,
+    required this.onPick,
+    required this.onRemove,
+  });
+
+  final String? imagePath;
+  final VoidCallback onPick;
+  final VoidCallback onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    final path = imagePath;
+    if (path == null) {
+      return OutlinedButton.icon(
+        onPressed: onPick,
+        icon: const Icon(Icons.image_outlined),
+        label: const Text('画像を追加'),
+      );
+    }
+
+    return Stack(
+      alignment: Alignment.topRight,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: AspectRatio(
+            aspectRatio: 16 / 9,
+            child: GestureDetector(
+              onTap: onPick,
+              child: Image.file(File(path), fit: BoxFit.cover),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(4),
+          child: CircleAvatar(
+            radius: 14,
+            backgroundColor: Colors.black54,
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              iconSize: 16,
+              icon: const Icon(Icons.close, color: Colors.white),
+              onPressed: onRemove,
+            ),
+          ),
+        ),
       ],
     );
   }

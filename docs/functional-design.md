@@ -151,6 +151,7 @@ erDiagram
         datetime postedAt
         string quotedPostId FK "引用元Post(任意)"
         int order "タイムライン内の並び順"
+        string imagePath "添付画像(任意、1枚まで)"
     }
 ```
 
@@ -160,6 +161,7 @@ erDiagram
 - `Account` は `Scene` に従属する(プロジェクト横断・アプリ全体の共有アカウントは持たない)。撮影ごとに独立して作り込める設計を優先する
 - `POST` の自己参照(`quotedPostId`)により、投稿詳細エディタでの引用ポスト表示に対応する
 - `STATUS_BAR_CONFIG` はSceneに対して1:1。タイムライン・投稿詳細どちらの種類でも同じ設定構造を使う
+- `POST.imagePath` は`Account.iconImagePath`と同様、端末ローカルの画像ファイルパスをそのまま保持する(1投稿につき1枚まで)
 
 ---
 
