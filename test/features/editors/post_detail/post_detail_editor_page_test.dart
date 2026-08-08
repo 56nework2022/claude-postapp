@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:fake_x_post_maker/data/scene_repository.dart';
-import 'package:fake_x_post_maker/features/editors/post_detail/post_detail_editor_page.dart';
-import 'package:fake_x_post_maker/models/project.dart';
-import 'package:fake_x_post_maker/models/scene.dart';
-import 'package:fake_x_post_maker/models/status_bar_config.dart';
-import 'package:fake_x_post_maker/providers/scene_providers.dart';
-import 'package:fake_x_post_maker/widgets/post_card.dart';
-import 'package:fake_x_post_maker/widgets/post_editor_sheet.dart';
+import 'package:fake_post_maker/data/scene_repository.dart';
+import 'package:fake_post_maker/features/editors/post_detail/post_detail_editor_page.dart';
+import 'package:fake_post_maker/models/project.dart';
+import 'package:fake_post_maker/models/scene.dart';
+import 'package:fake_post_maker/models/status_bar_config.dart';
+import 'package:fake_post_maker/providers/scene_providers.dart';
+import 'package:fake_post_maker/widgets/post_card.dart';
+import 'package:fake_post_maker/widgets/post_editor_sheet.dart';
 
 /// Hiveの実ディスクI/OはtestWidgetsのFakeAsyncゾーン内では待てないため、
 /// Widgetテストではインメモリのフェイクリポジトリに差し替える

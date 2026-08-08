@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:fake_x_post_maker/models/status_bar_config.dart';
-import 'package:fake_x_post_maker/widgets/fake_status_bar.dart';
+import 'package:fake_post_maker/models/status_bar_config.dart';
+import 'package:fake_post_maker/widgets/fake_status_bar.dart';
 
 void main() {
   Future<void> pumpFakeStatusBar(

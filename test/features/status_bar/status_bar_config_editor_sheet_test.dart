@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:fake_x_post_maker/features/status_bar/status_bar_config_editor_sheet.dart';
-import 'package:fake_x_post_maker/models/status_bar_config.dart';
+import 'package:fake_post_maker/features/status_bar/status_bar_config_editor_sheet.dart';
+import 'package:fake_post_maker/models/status_bar_config.dart';
 
 void main() {
   testWidgets('OS切り替え・手動時刻・充電中トグルを変更して保存すると変更が返される', (tester) async {

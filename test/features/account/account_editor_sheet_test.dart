@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:fake_x_post_maker/features/account/account_editor_sheet.dart';
-import 'package:fake_x_post_maker/models/account.dart';
+import 'package:fake_post_maker/features/account/account_editor_sheet.dart';
+import 'package:fake_post_maker/models/account.dart';
 
 void main() {
   testWidgets('表示名・ユーザー名・認証バッジを編集して保存すると変更が返される', (tester) async {

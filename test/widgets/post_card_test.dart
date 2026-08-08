@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:fake_x_post_maker/models/account.dart';
-import 'package:fake_x_post_maker/models/post.dart';
-import 'package:fake_x_post_maker/widgets/post_card.dart';
+import 'package:fake_post_maker/models/account.dart';
+import 'package:fake_post_maker/models/post.dart';
+import 'package:fake_post_maker/widgets/post_card.dart';
 
 /// `transparent_image`パッケージ等で広く使われる、有効な1x1透明PNGのバイト列。
 /// デコードが(テスト内で待たなくても)裏で成功して静かに終わるようにするため、

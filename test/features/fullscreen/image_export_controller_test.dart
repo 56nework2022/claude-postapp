@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:screenshot/screenshot.dart';
 
-import 'package:fake_x_post_maker/features/fullscreen/image_export_controller.dart';
+import 'package:fake_post_maker/features/fullscreen/image_export_controller.dart';
 
 void main() {
   const channel = MethodChannel('gal');

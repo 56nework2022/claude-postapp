@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:fake_x_post_maker/data/project_repository.dart';
-import 'package:fake_x_post_maker/features/project_list/project_list_page.dart';
-import 'package:fake_x_post_maker/models/project.dart';
-import 'package:fake_x_post_maker/providers/project_providers.dart';
+import 'package:fake_post_maker/data/project_repository.dart';
+import 'package:fake_post_maker/features/project_list/project_list_page.dart';
+import 'package:fake_post_maker/models/project.dart';
+import 'package:fake_post_maker/providers/project_providers.dart';
 
 /// Hiveの実ディスクI/Oは`testWidgets`が使うFakeAsyncゾーン内では
 /// 完了を待てず永久に固まるため、Widgetテストではインメモリの

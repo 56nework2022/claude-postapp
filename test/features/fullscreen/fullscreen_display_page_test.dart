@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:fake_x_post_maker/features/fullscreen/fullscreen_display_page.dart';
-import 'package:fake_x_post_maker/models/account.dart';
-import 'package:fake_x_post_maker/models/post.dart';
-import 'package:fake_x_post_maker/models/scene.dart';
-import 'package:fake_x_post_maker/models/status_bar_config.dart';
-import 'package:fake_x_post_maker/widgets/post_card.dart';
+import 'package:fake_post_maker/features/fullscreen/fullscreen_display_page.dart';
+import 'package:fake_post_maker/models/account.dart';
+import 'package:fake_post_maker/models/post.dart';
+import 'package:fake_post_maker/models/scene.dart';
+import 'package:fake_post_maker/models/status_bar_config.dart';
+import 'package:fake_post_maker/widgets/post_card.dart';
 
 void main() {
   Scene buildScene({

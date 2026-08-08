@@ -1,12 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:fake_x_post_maker/data/scene_repository.dart';
-import 'package:fake_x_post_maker/models/project.dart';
-import 'package:fake_x_post_maker/models/scene.dart';
-import 'package:fake_x_post_maker/models/status_bar_config.dart';
-import 'package:fake_x_post_maker/providers/editor_providers.dart';
-import 'package:fake_x_post_maker/providers/scene_providers.dart';
+import 'package:fake_post_maker/data/scene_repository.dart';
+import 'package:fake_post_maker/models/project.dart';
+import 'package:fake_post_maker/models/scene.dart';
+import 'package:fake_post_maker/models/status_bar_config.dart';
+import 'package:fake_post_maker/providers/editor_providers.dart';
+import 'package:fake_post_maker/providers/scene_providers.dart';
 
 /// Hiveの実ディスクI/Oを使わず、インメモリでSceneRepositoryの挙動を再現する
 /// (Widgetテストで使っているフェイクと同じ方針。ここではWidgetを介さない

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:fake_x_post_maker/utils/post_time_formatter.dart';
+import 'package:fake_post_maker/utils/post_time_formatter.dart';
 
 void main() {
   group('formatRelativeTime', () {

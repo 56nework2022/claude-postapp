@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 
-import 'package:fake_x_post_maker/models/account.dart';
-import 'package:fake_x_post_maker/models/post.dart';
-import 'package:fake_x_post_maker/models/project.dart';
-import 'package:fake_x_post_maker/models/scene.dart';
-import 'package:fake_x_post_maker/models/status_bar_config.dart';
+import 'package:fake_post_maker/models/account.dart';
+import 'package:fake_post_maker/models/post.dart';
+import 'package:fake_post_maker/models/project.dart';
+import 'package:fake_post_maker/models/scene.dart';
+import 'package:fake_post_maker/models/status_bar_config.dart';
 
 import '../hive_test_utils.dart';
 
