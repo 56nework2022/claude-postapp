@@ -148,7 +148,7 @@
 
 ## 全体の完了条件(フェーズ1リリース判定)
 
-- [ ] `docs/product-requirements.md` 7節の受け入れ条件をすべて満たす
+- [x] `docs/product-requirements.md` 7節の受け入れ条件をすべて満たす
 - [ ] iOS・Androidの両実機(またはシミュレータ/エミュレータ)で一連の操作が確認できる
-- [ ] `docs/development-guidelines.md` のLint・テスト方針に沿って品質チェックが完了している
+- [x] `docs/development-guidelines.md` のLint・テスト方針に沿って品質チェックが完了している
 - [ ] 透かし・Xの公式ロゴ/名称が含まれていないことを確認する
