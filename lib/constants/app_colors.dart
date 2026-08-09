@@ -14,5 +14,5 @@ class AppColors {
   static const statusBarInactive = Color(0xFFBDBDBD);
 
   /// 認証バッジの色(Xの公式カラーではなく汎用的な青)。
-  static const verifiedBadge = Color(0xFF1D9BF0);
+  static const verifiedBadge = Color(0xFF2196F3);
 }
