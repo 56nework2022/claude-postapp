@@ -15,14 +15,14 @@
 
 ## Task 1: アプリ表示名変更
 
-- [ ] `android/app/src/main/AndroidManifest.xml` の `android:label` を「撮影用ポスト画面メーカー」に変更
-- [ ] `flutter analyze` でビルド確認
+- [x] `android/app/src/main/AndroidManifest.xml` の `android:label` を「撮影用ポスト画面メーカー」に変更
+- [x] `flutter analyze` でビルド確認
 
 ## Task 2: アプリアイコン作成・適用
 
-- [ ] Claudeが簡易案(1024×1024マスター画像)を作成し、アーティファクトでユーザーに確認・承認
-- [ ] `flutter_launcher_icons` を導入し、`assets/icon/app_icon.png` に正方形フルブリード版を配置
-- [ ] Android全解像度(mipmap-*)に適用し、`flutter analyze`で確認
+- [x] Claudeが簡易案(1024×1024マスター画像)を作成し、アーティファクトでユーザーに確認・承認
+- [x] `flutter_launcher_icons` を導入し、`assets/icon/app_icon.png` に正方形フルブリード版を配置
+- [x] Android全解像度(mipmap-*)に適用し、`flutter analyze`で確認
 
 ## Task 3: リリース署名用keystore生成(ユーザー本人作業)
 

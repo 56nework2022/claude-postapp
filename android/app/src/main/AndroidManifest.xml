@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="Fake Post Maker"
+        android:label="撮影用ポスト画面メーカー"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
