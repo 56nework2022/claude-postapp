@@ -26,14 +26,16 @@
 
 ## Task 3: リリース署名用keystore生成(ユーザー本人作業)
 
-- [ ] `keytool -genkeypair` コマンドをユーザー自身のWindows環境で実行し、`upload-keystore.jks` を生成(手順はセッション内で提示済み)
-- [ ] `android/key.properties` を作成(storePassword/keyPassword/keyAlias/storeFile)。`.gitignore`で除外済みであることは確認済み
-- [ ] keystoreファイルとパスワードを安全な場所にバックアップ
+- [x] `keytool -genkeypair` コマンドをユーザー自身のWindows環境で実行し、`upload-keystore.jks` を生成(PowerShellでの識別名入力ループ回避のため`-dname`オプションを使用)
+- [x] `android/key.properties` を作成(storePassword/keyPassword/keyAlias/storeFile)。`android/.gitignore`で除外済み
+- [x] keystoreファイルとパスワードを安全な場所にバックアップ済み
+  - 補足: `upload-keystore.jks`はプロジェクトルート直下に生成されたが、ルート`.gitignore`に除外設定がなく`git status`で未追跡表示になっていた不具合を発見・修正済み(ルート`.gitignore`に`/upload-keystore.jks`・`*.jks`・`*.keystore`を追加)
 
 ## Task 4: リリースビルド確認
 
-- [ ] `flutter analyze` クリーン確認
-- [ ] ユーザーのWindows環境で `flutter build appbundle --release` を実行し、署名済みAABが生成されることを確認
+- [x] `flutter analyze` クリーン確認(devcontainerで実施、問題なし)
+- [x] ユーザーのWindows環境で `flutter build appbundle --release` を実行し、署名済みAAB(`build\app\outputs\bundle\release\app-release.aab`, 49.1MB)が生成されることを確認
+  - ハマりどころ: `android/app/build.gradle.kts`の`storeFile = file(...)`は`android/app/`からの相対パスで解決される(`key.properties`自体の読み込みは`rootProject.file(...)`で`android/`基準なのとは別)。`upload-keystore.jks`がプロジェクトルートにある場合、`key.properties`の`storeFile`は`../../upload-keystore.jks`(2階層上)が正しい。`../upload-keystore.jks`だと`android/upload-keystore.jks`を探しに行きビルド失敗した
 
 ## Task 5: プライバシーポリシー作成・公開
 
