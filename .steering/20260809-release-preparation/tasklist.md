@@ -39,12 +39,14 @@
 
 ## Task 5: プライバシーポリシー作成・公開
 
-- [ ] `docs/privacy-policy.md` を作成(収集情報なし・写真ライブラリはローカル処理のみ・Hiveによる端末内保存の旨を明記)
-- [ ] GitHub Pagesを有効化(ユーザー承認のうえ)し、公開URLを確定
+- [x] `docs/privacy-policy.md` を作成(収集情報なし・写真ライブラリはローカル処理のみ・Hiveによる端末内保存の旨を明記)(コミット`aebcb5c`)
+- [x] GitHub Pagesを有効化(ユーザー承認のうえ)し、公開URLを確定
+  - 補足: Free プランではPrivateリポジトリでGitHub Pagesが使えないため、リポジトリをPublicに変更したうえで有効化(ユーザー本人が実施)
+  - 公開URL: `https://56nework2022.github.io/claude-postapp/privacy-policy`(200応答・内容確認済み)
 
 ## Task 6: ストア掲載情報ドラフト作成
 
-- [ ] `store-listing-draft.md` を作成(アプリ名・簡単な説明・詳細な説明・コンテンツレーティング方針・データセーフティ回答方針・スクリーンショット撮影案)
+- [x] `store-listing-draft.md` を作成(アプリ名・簡単な説明・詳細な説明・コンテンツレーティング方針・データセーフティ回答方針・スクリーンショット撮影案)(コミット`e729b31`)
 
 ## Task 7: 実機動作確認
 
