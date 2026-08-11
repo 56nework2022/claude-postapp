@@ -10,6 +10,7 @@ class HiveBoxes {
   HiveBoxes._();
 
   static const String projectsBoxName = 'projects';
+  static const String appSettingsBoxName = 'app_settings';
 
   static Future<void> init() async {
     await Hive.initFlutter();
@@ -25,7 +26,9 @@ class HiveBoxes {
       ..registerAdapter(TimeModeAdapter());
 
     await Hive.openBox<Project>(projectsBoxName);
+    await Hive.openBox(appSettingsBoxName);
   }
 
   static Box<Project> get projectsBox => Hive.box<Project>(projectsBoxName);
+  static Box get appSettingsBox => Hive.box(appSettingsBoxName);
 }

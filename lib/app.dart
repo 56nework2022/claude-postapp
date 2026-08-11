@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'features/disclaimer/disclaimer_gate.dart';
 import 'features/project_list/project_list_page.dart';
 
 class App extends StatelessWidget {
@@ -13,7 +14,7 @@ class App extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const ProjectListPage(),
+      home: const DisclaimerGate(child: ProjectListPage()),
     );
   }
 }
