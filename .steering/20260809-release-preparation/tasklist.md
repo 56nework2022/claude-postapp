@@ -47,6 +47,8 @@
 ## Task 6: ストア掲載情報ドラフト作成
 
 - [x] `store-listing-draft.md` を作成(アプリ名・簡単な説明・詳細な説明・コンテンツレーティング方針・データセーフティ回答方針・スクリーンショット撮影案)(コミット`e729b31`)
+- [x] `screenshot-shooting-guide.md` を作成(撮影シーン別の具体的な操作手順・撮影方法・技術要件・納品先 `assets/store/screenshots/` を明記)
+- [ ] ユーザー本人がWindows環境のエミュレータ/実機で7枚のスクリーンショットを撮影し、`assets/store/screenshots/` に配置(devcontainerにはAndroid SDK/ディスプレイが無いため代行不可)
 
 ## Task 7: 実機動作確認
 
