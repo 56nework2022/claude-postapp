@@ -170,6 +170,7 @@ class _Footer extends StatelessWidget {
         _FooterItem(icon: Icons.chat_bubble_outline, label: post.replyCountLabel),
         _FooterItem(icon: Icons.repeat, label: post.repostCountLabel),
         _FooterItem(icon: Icons.favorite_border, label: post.likeCountLabel),
+        _FooterItem(icon: Icons.bar_chart, label: post.viewCountLabel),
         const Spacer(),
         Icon(Icons.ios_share, size: 16, color: Colors.grey.shade600),
       ],

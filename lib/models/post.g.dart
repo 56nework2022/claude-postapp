@@ -27,13 +27,14 @@ class PostAdapter extends TypeAdapter<Post> {
       order: fields[8] as int,
       quotedPostId: fields[7] as String?,
       imagePath: fields[9] as String?,
+      viewCountLabel: fields[10] == null ? '0' : fields[10] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, Post obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -53,7 +54,9 @@ class PostAdapter extends TypeAdapter<Post> {
       ..writeByte(8)
       ..write(obj.order)
       ..writeByte(9)
-      ..write(obj.imagePath);
+      ..write(obj.imagePath)
+      ..writeByte(10)
+      ..write(obj.viewCountLabel);
   }
 
   @override

@@ -29,6 +29,7 @@ void main() {
       likeCountLabel: '1.2万',
       repostCountLabel: '100',
       replyCountLabel: '10',
+      viewCountLabel: '9999',
       postedAt: DateTime(2026, 8, 1, 12, 0),
       order: 0,
     );
@@ -71,6 +72,7 @@ void main() {
     expect(loaded.scenes.first.type, SceneType.timeline);
     expect(loaded.scenes.first.accounts.first.username, 'user1');
     expect(loaded.scenes.first.posts.first.likeCountLabel, '1.2万');
+    expect(loaded.scenes.first.posts.first.viewCountLabel, '9999');
     expect(
       loaded.scenes.first.statusBarConfig.platform,
       StatusBarPlatform.ios,

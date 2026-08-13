@@ -15,6 +15,7 @@ class Post {
     required this.order,
     this.quotedPostId,
     this.imagePath,
+    this.viewCountLabel = '0',
   });
 
   @HiveField(0)
@@ -46,4 +47,7 @@ class Post {
 
   @HiveField(9)
   String? imagePath;
+
+  @HiveField(10, defaultValue: '0')
+  String viewCountLabel;
 }

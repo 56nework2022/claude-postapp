@@ -148,6 +148,7 @@ erDiagram
         string likeCountLabel "例:1.2万"
         string repostCountLabel
         string replyCountLabel
+        string viewCountLabel "例:5.6万"
         datetime postedAt
         string quotedPostId FK "引用元Post(任意)"
         int order "タイムライン内の並び順"

@@ -51,6 +51,7 @@ Post _createDefaultPost({required int order, required String accountId}) {
     likeCountLabel: '0',
     repostCountLabel: '0',
     replyCountLabel: '0',
+    viewCountLabel: '0',
     postedAt: DateTime.now(),
     order: order,
   );

@@ -7,7 +7,7 @@ import '../constants/app_spacing.dart';
 import '../models/post.dart';
 import '../utils/post_time_formatter.dart';
 
-/// 投稿(Post)1件分の編集フォーム(本文・返信数・リポスト数・いいね数・日時)。
+/// 投稿(Post)1件分の編集フォーム(本文・返信数・リポスト数・いいね数・表示回数・日時)。
 ///
 /// [post] のフィールドを直接ミューテートし、変更のたびに[onChanged]を呼び出す。
 /// Hiveへの保存やプレビューの再描画は呼び出し側(各エディタのNotifier)が担う。
@@ -33,6 +33,7 @@ class _PostFieldsFormState extends State<PostFieldsForm> {
   late final TextEditingController _replyController;
   late final TextEditingController _repostController;
   late final TextEditingController _likeController;
+  late final TextEditingController _viewController;
 
   @override
   void initState() {
@@ -41,6 +42,7 @@ class _PostFieldsFormState extends State<PostFieldsForm> {
     _replyController = TextEditingController(text: widget.post.replyCountLabel);
     _repostController = TextEditingController(text: widget.post.repostCountLabel);
     _likeController = TextEditingController(text: widget.post.likeCountLabel);
+    _viewController = TextEditingController(text: widget.post.viewCountLabel);
   }
 
   @override
@@ -49,6 +51,7 @@ class _PostFieldsFormState extends State<PostFieldsForm> {
     _replyController.dispose();
     _repostController.dispose();
     _likeController.dispose();
+    _viewController.dispose();
     super.dispose();
   }
 
@@ -105,6 +108,17 @@ class _PostFieldsFormState extends State<PostFieldsForm> {
                 decoration: const InputDecoration(labelText: 'いいね数'),
                 onChanged: (value) {
                   widget.post.likeCountLabel = value;
+                  widget.onChanged();
+                },
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: TextField(
+                controller: _viewController,
+                decoration: const InputDecoration(labelText: '表示回数'),
+                onChanged: (value) {
+                  widget.post.viewCountLabel = value;
                   widget.onChanged();
                 },
               ),

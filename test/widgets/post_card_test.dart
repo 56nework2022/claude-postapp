@@ -34,6 +34,7 @@ void main() {
     likeCountLabel: '1.2万',
     repostCountLabel: '3.4万',
     replyCountLabel: '12',
+    viewCountLabel: '5.6万',
     postedAt: DateTime(2026, 8, 1, 15, 0),
     order: 0,
   );
@@ -50,6 +51,8 @@ void main() {
     expect(find.text('12'), findsOneWidget);
     expect(find.text('3.4万'), findsOneWidget);
     expect(find.text('1.2万'), findsOneWidget);
+    expect(find.text('5.6万'), findsOneWidget);
+    expect(find.byIcon(Icons.bar_chart), findsOneWidget);
     expect(find.byIcon(Icons.verified), findsOneWidget);
   });
 
