@@ -150,6 +150,7 @@ class _BatteryIndicator extends StatelessWidget {
             children: [
               FractionallySizedBox(
                 widthFactor: fillRatio,
+                heightFactor: 1.0,
                 child: const ColoredBox(color: AppColors.statusBarForeground),
               ),
               if (charging)
