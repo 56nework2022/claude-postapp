@@ -124,11 +124,17 @@ class _SceneContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        FakeStatusBar(config: scene.statusBarConfig),
-        Expanded(child: _buildBody()),
-      ],
+    // PostCard等はコンテナ色を持たず、Scaffoldの背景に頼っているため、
+    // Screenshot(RepaintBoundary)のキャプチャ範囲外になり透過してしまう。
+    // ここで明示的に不透明な背景を敷いてキャプチャに含める。
+    return ColoredBox(
+      color: AppColors.sceneBackground,
+      child: Column(
+        children: [
+          FakeStatusBar(config: scene.statusBarConfig),
+          Expanded(child: _buildBody()),
+        ],
+      ),
     );
   }
 

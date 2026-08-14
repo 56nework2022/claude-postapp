@@ -7,6 +7,9 @@ class AppColors {
   /// 疑似ステータスバー(FakeStatusBar)の背景色。
   static const statusBarBackground = Colors.white;
 
+  /// 撮影対象シーン(FakeStatusBar+投稿本体)全体の背景色。
+  static const sceneBackground = Colors.white;
+
   /// 疑似ステータスバーの文字・アイコン色。
   static const statusBarForeground = Colors.black;
 
