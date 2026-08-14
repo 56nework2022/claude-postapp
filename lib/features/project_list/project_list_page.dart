@@ -34,37 +34,51 @@ class ProjectListPage extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) async {
-    final controller = TextEditingController();
-    final name = await showDialog<String>(
-      context: context,
-      builder: (dialogContext) {
-        return AlertDialog(
-          title: const Text('新規プロジェクト'),
-          content: TextField(
-            controller: controller,
-            autofocus: true,
-            decoration: const InputDecoration(labelText: 'プロジェクト名'),
-            onSubmitted: (value) => Navigator.of(dialogContext).pop(value),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('キャンセル'),
-            ),
-            TextButton(
-              onPressed: () =>
-                  Navigator.of(dialogContext).pop(controller.text),
-              child: const Text('作成'),
-            ),
-          ],
-        );
-      },
+    final trimmedName = await _showProjectNameDialog(
+      context,
+      title: '新規プロジェクト',
+      confirmLabel: '作成',
     );
-
-    final trimmedName = name?.trim();
-    if (trimmedName == null || trimmedName.isEmpty) return;
+    if (trimmedName == null) return;
     await ref.read(projectListProvider.notifier).createProject(trimmedName);
   }
+}
+
+Future<String?> _showProjectNameDialog(
+  BuildContext context, {
+  required String title,
+  required String confirmLabel,
+  String initialValue = '',
+}) async {
+  final controller = TextEditingController(text: initialValue);
+  final name = await showDialog<String>(
+    context: context,
+    builder: (dialogContext) {
+      return AlertDialog(
+        title: Text(title),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: const InputDecoration(labelText: 'プロジェクト名'),
+          onSubmitted: (value) => Navigator.of(dialogContext).pop(value),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('キャンセル'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(controller.text),
+            child: Text(confirmLabel),
+          ),
+        ],
+      );
+    },
+  );
+
+  final trimmedName = name?.trim();
+  if (trimmedName == null || trimmedName.isEmpty) return null;
+  return trimmedName;
 }
 
 class _EmptyState extends StatelessWidget {
@@ -107,6 +121,11 @@ class _ProjectListTile extends ConsumerWidget {
       child: ListTile(
         title: Text(project.name),
         subtitle: Text('画面数: ${project.scenes.length}'),
+        trailing: IconButton(
+          icon: const Icon(Icons.edit_outlined),
+          tooltip: 'プロジェクト名を編集',
+          onPressed: () => _showEditProjectDialog(context, ref, project),
+        ),
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -116,5 +135,22 @@ class _ProjectListTile extends ConsumerWidget {
         },
       ),
     );
+  }
+
+  Future<void> _showEditProjectDialog(
+    BuildContext context,
+    WidgetRef ref,
+    Project project,
+  ) async {
+    final trimmedName = await _showProjectNameDialog(
+      context,
+      title: 'プロジェクト名を編集',
+      confirmLabel: '保存',
+      initialValue: project.name,
+    );
+    if (trimmedName == null || trimmedName == project.name) return;
+    await ref
+        .read(projectListProvider.notifier)
+        .renameProject(project, trimmedName);
   }
 }

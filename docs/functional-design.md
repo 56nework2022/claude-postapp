@@ -185,7 +185,7 @@ graph TD
 
 | コンポーネント | 種別 | 役割 |
 |---|---|---|
-| `ProjectListPage` | View | プロジェクトの一覧表示・作成・削除 |
+| `ProjectListPage` | View | プロジェクトの一覧表示・作成・編集・削除 |
 | `SceneListPage` | View | プロジェクト内のScene一覧表示・新規作成(種類選択) |
 | `SceneTypePickerSheet` | View | 新規Scene作成時の種類選択(タイムライン/投稿詳細) |
 | `AccountEditorSheet` | View | アカウント(名前・ユーザー名・アイコン・認証バッジ)編集 |

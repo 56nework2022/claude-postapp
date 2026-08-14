@@ -75,6 +75,28 @@ void main() {
     expect(find.textContaining('プロジェクトがありません'), findsOneWidget);
   });
 
+  testWidgets('編集アイコンからプロジェクト名を変更できる', (tester) async {
+    await pumpProjectListPage(tester);
+
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'テストプロジェクト');
+    await tester.tap(find.widgetWithText(TextButton, '作成'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.edit_outlined));
+    await tester.pumpAndSettle();
+
+    expect(find.widgetWithText(TextField, 'テストプロジェクト'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextField), '改名後プロジェクト');
+    await tester.tap(find.widgetWithText(TextButton, '保存'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('改名後プロジェクト'), findsOneWidget);
+    expect(find.text('テストプロジェクト'), findsNothing);
+  });
+
   testWidgets('プロジェクトをタップすると画面(Scene)一覧画面へ遷移する', (tester) async {
     await pumpProjectListPage(tester);
 

@@ -33,6 +33,13 @@ class ProjectListNotifier extends Notifier<List<Project>> {
     state = repository.getAll();
   }
 
+  Future<void> renameProject(Project project, String name) async {
+    final repository = ref.read(projectRepositoryProvider);
+    project.name = name;
+    await repository.update(project);
+    state = repository.getAll();
+  }
+
   Future<void> deleteProject(Project project) async {
     final repository = ref.read(projectRepositoryProvider);
     await repository.delete(project);
