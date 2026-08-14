@@ -6,6 +6,7 @@ import '../data/scene_repository.dart';
 import '../models/project.dart';
 import '../models/scene.dart';
 import '../models/status_bar_config.dart';
+import 'project_providers.dart';
 
 final sceneRepositoryProvider = Provider<SceneRepository>((ref) {
   return SceneRepository();
@@ -46,6 +47,7 @@ class SceneListNotifier extends FamilyNotifier<List<Scene>, Project> {
     );
     await repository.add(arg, scene);
     state = repository.getAll(arg);
+    ref.read(projectListProvider.notifier).refresh();
     return scene;
   }
 
@@ -53,6 +55,7 @@ class SceneListNotifier extends FamilyNotifier<List<Scene>, Project> {
     final repository = ref.read(sceneRepositoryProvider);
     await repository.delete(arg, scene.id);
     state = repository.getAll(arg);
+    ref.read(projectListProvider.notifier).refresh();
   }
 
   String _generateId() {

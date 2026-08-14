@@ -46,6 +46,10 @@ class ProjectListNotifier extends Notifier<List<Project>> {
     state = repository.getAll();
   }
 
+  void refresh() {
+    state = ref.read(projectRepositoryProvider).getAll();
+  }
+
   String _generateId() {
     final randomSuffix = Random().nextInt(1 << 32).toRadixString(16);
     return '${DateTime.now().microsecondsSinceEpoch}-$randomSuffix';

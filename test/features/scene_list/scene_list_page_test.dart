@@ -2,11 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:fake_post_maker/data/project_repository.dart';
 import 'package:fake_post_maker/data/scene_repository.dart';
 import 'package:fake_post_maker/features/scene_list/scene_list_page.dart';
 import 'package:fake_post_maker/models/project.dart';
 import 'package:fake_post_maker/models/scene.dart';
+import 'package:fake_post_maker/providers/project_providers.dart';
 import 'package:fake_post_maker/providers/scene_providers.dart';
+
+/// scene_repositoryと同様、projectRepositoryもHiveの実I/Oを避けるため
+/// フェイクに差し替える(SceneListNotifierがScene追加/削除時に
+/// projectListProviderをrefreshし、内部でProjectRepositoryへアクセスするため)。
+class _FakeProjectRepository implements ProjectRepository {
+  @override
+  List<Project> getAll() => [];
+
+  @override
+  Future<void> add(Project project) async {}
+
+  @override
+  Future<void> update(Project project) async {}
+
+  @override
+  Future<void> delete(Project project) async {}
+}
 
 /// Hiveの実ディスクI/OはtestWidgetsのFakeAsyncゾーン内では待てないため、
 /// Widgetテストではインメモリのフェイクリポジトリに差し替える(project_list_page_testと同じ方針)。
@@ -55,6 +74,9 @@ void main() {
       ProviderScope(
         overrides: [
           sceneRepositoryProvider.overrideWithValue(_FakeSceneRepository()),
+          projectRepositoryProvider.overrideWithValue(
+            _FakeProjectRepository(),
+          ),
         ],
         child: MaterialApp(home: SceneListPage(project: project)),
       ),

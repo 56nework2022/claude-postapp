@@ -3,9 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:fake_post_maker/data/project_repository.dart';
+import 'package:fake_post_maker/data/scene_repository.dart';
 import 'package:fake_post_maker/features/project_list/project_list_page.dart';
 import 'package:fake_post_maker/models/project.dart';
+import 'package:fake_post_maker/models/scene.dart';
 import 'package:fake_post_maker/providers/project_providers.dart';
+import 'package:fake_post_maker/providers/scene_providers.dart';
 
 /// Hiveの実ディスクI/Oは`testWidgets`が使うFakeAsyncゾーン内では
 /// 完了を待てず永久に固まるため、Widgetテストではインメモリの
@@ -35,13 +38,50 @@ class _FakeProjectRepository implements ProjectRepository {
   }
 }
 
+/// scene_list_page_testと同じ方針で、Hiveの実I/Oを避けるためのフェイク。
+class _FakeSceneRepository implements SceneRepository {
+  final Map<String, List<Scene>> _scenesByProjectId = {};
+
+  @override
+  List<Scene> getAll(Project project) {
+    final scenes = List<Scene>.from(_scenesByProjectId[project.id] ?? []);
+    return scenes..sort((a, b) => a.order.compareTo(b.order));
+  }
+
+  @override
+  Future<void> add(Project project, Scene scene) async {
+    _scenesByProjectId.putIfAbsent(project.id, () => []).add(scene);
+    project.scenes.add(scene);
+  }
+
+  @override
+  Future<void> update(Project project, Scene scene) async {
+    final scenes = _scenesByProjectId[project.id];
+    if (scenes == null) return;
+    final index = scenes.indexWhere((s) => s.id == scene.id);
+    if (index != -1) scenes[index] = scene;
+  }
+
+  @override
+  Future<void> delete(Project project, String sceneId) async {
+    _scenesByProjectId[project.id]?.removeWhere((s) => s.id == sceneId);
+    project.scenes.removeWhere((s) => s.id == sceneId);
+  }
+}
+
 void main() {
-  Future<void> pumpProjectListPage(WidgetTester tester) async {
+  Future<void> pumpProjectListPage(
+    WidgetTester tester, {
+    SceneRepository? sceneRepository,
+  }) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
           projectRepositoryProvider.overrideWithValue(
             _FakeProjectRepository(),
+          ),
+          sceneRepositoryProvider.overrideWithValue(
+            sceneRepository ?? _FakeSceneRepository(),
           ),
         ],
         child: const MaterialApp(home: ProjectListPage()),
@@ -111,5 +151,32 @@ void main() {
 
     expect(find.text('画面がありません\n右下の + から作成してください'), findsOneWidget);
     expect(find.widgetWithText(AppBar, 'テストプロジェクト'), findsOneWidget);
+  });
+
+  testWidgets('画面(Scene)を追加して一覧に戻ると画面数の表示が更新される', (tester) async {
+    await pumpProjectListPage(tester);
+
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'テストプロジェクト');
+    await tester.tap(find.widgetWithText(TextButton, '作成'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('画面数: 0'), findsOneWidget);
+
+    await tester.tap(find.text('テストプロジェクト'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('タイムライン'));
+    await tester.pumpAndSettle();
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    expect(find.text('画面数: 1'), findsOneWidget);
   });
 }
