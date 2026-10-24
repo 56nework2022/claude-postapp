@@ -48,18 +48,18 @@
 
 - [x] `store-listing-draft.md` を作成(アプリ名・簡単な説明・詳細な説明・コンテンツレーティング方針・データセーフティ回答方針・スクリーンショット撮影案)(コミット`e729b31`)
 - [x] `screenshot-shooting-guide.md` を作成(撮影シーン別の具体的な操作手順・撮影方法・技術要件・納品先 `assets/store/screenshots/` を明記)
-- [ ] ユーザー本人がWindows環境のエミュレータ/実機で7枚のスクリーンショットを撮影し、`assets/store/screenshots/` に配置(devcontainerにはAndroid SDK/ディスプレイが無いため代行不可)
+- [x] ユーザー本人がWindows環境のエミュレータ/実機で7枚のスクリーンショットを撮影し、`assets/store/screenshots/` に配置(devcontainerにはAndroid SDK/ディスプレイが無いため代行不可)
 
 ## Task 7: 実機動作確認
 
 - [x] AVDストレージ不足を解消し、Windows環境で`flutter run`(デバッグビルド)によりエミュレータでアプリ起動を確認
 - [x] 免責ダイアログの表示・非表示の動作確認、およびフェーズ1機能一式(投稿詳細・タイムライン・画像添付・リプライ・フルスクリーン表示・画像書き出し)が問題なく動作することをエミュレータ(デバッグビルド)で確認
-- [ ] `requirements.md` §5の既知リスクを踏まえ、Task 4で生成した**署名済みリリースAAB**をPlay Console内部テストトラックへアップロードし、物理Android端末への配布リンク経由でリリースビルドの動作確認を行う(デバッグビルドとリリースビルドは最適化・署名の有無が異なるため別確認が必要。Play Console登録はユーザー本人の作業)
+- [x] `requirements.md` §5の既知リスクを踏まえ、Task 4で生成した**署名済みリリースAAB**をPlay Console内部テストトラックへアップロードし、物理Android端末への配布リンク経由でリリースビルドの動作確認を行う(デバッグビルドとリリースビルドは最適化・署名の有無が異なるため別確認が必要。Play Console登録はユーザー本人の作業)
 
 ## Task 8: 最終チェック・引き継ぎ
 
-- [ ] `requirements.md` §4の受け入れ条件を全項目確認
-- [ ] Play Console登録・審査提出をユーザー本人の作業として引き継ぐ`handoff.md`を作成
+- [x] `requirements.md` §4の受け入れ条件を全項目確認
+- [x] Play Console登録・審査提出をユーザー本人の作業として引き継ぐ(2026-10-24: Google Play Storeへ公開完了のためhandoff.mdは作成せず完了扱い)
 
 ---
 
